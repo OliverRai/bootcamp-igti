@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Trabalho Prático</title>
+</head>
+<body>
+    <h1>Desafio Prático RGB - Módulo 1 - Bootcamp Fullstack</h1>
+    <div id="container">
+    <div class="labels">
+        <label>(R) Vermelho</label></br>
+        <label>(G) Verde</label></br>
+        <label>(B) Azul</label></br>
+    </div>
+    <div class="inputs">
+        <input value="0" min="0" max="255" id="red" type="range" class="inputRange" onchange="testar()">
+        <input class="set" type="text" id="inputRed" disabled>
+    </br>
+        <input value="0" min="0" max="255"  id="green" type="range" class="inputRange" onchange="testar()">
+        <input class="set" type="text" disabled id="inputGreen">
+    </br>
+        <input value="0" min="0" max="255" id="blue" type="range" class="inputRange" onchange="testar()">
+        <input class="set" type="text" disabled id="inputBlue">
+
+    </div>
+    <div id="div-color" class="color"></div>
+    </div>
+
+    <div id="dev">
+        <h3><i>Develop by </i>Raiane Oliveira</h3>
+        <a href="https://www.linkedin.com/in/raiane-oliveiraa/" target="_blank"><img src="./image/linkedin-67-433325.png" alt="LinkedIn" width="30px" height="30px"/></a>
+        <a href="https://github.com/OliverRai" target="_blank"><img src="./image/github-163-761603.png" alt="Github" width="30px" height="30px"></a>
+    </div>
+    
+    <script src="./js/script.js"></script>
+</body>
+</html>

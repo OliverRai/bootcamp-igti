@@ -1,0 +1,52 @@
+body{
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    border: 1px solid gray;
+    border-radius: 0.5rem;
+}
+
+.color{
+        width: 100px;
+        height: 100px;
+        margin-bottom: 30px;
+        float: left;
+        margin-left: 2rem;
+        margin-top: 2rem;
+        border-radius: 0.5rem;
+}
+
+label{
+   margin-right: 2rem
+}
+
+.set{
+    width: 30px;
+}
+
+.inputRange{
+    width: 200px;
+}
+
+#dev{
+    display: flex;
+    padding: 1rem;
+    align-items: center;
+}
+
+img{
+    margin-left: 0.5rem;
+}
+
+h3{
+    color: grey
+}

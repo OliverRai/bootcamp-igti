@@ -1,0 +1,73 @@
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: whitesmoke;
+}
+
+input{
+    height: 2rem;
+    padding: 0.5rem;
+    border-radius: 0.2rem;
+    border: 1px solid white;
+    width: 550px;
+    margin-bottom: 2rem;
+}
+
+button{
+    width: 100px;
+    height: 2rem;
+    border-radius: 0.2rem;
+    border: 1px solid rgb(12, 134, 59);
+    cursor: pointer;
+    background: rgb(18, 160, 72);
+    color: white;
+    font-weight: bold;
+}
+
+.div-container-user{
+    border-radius: 0.9rem;
+    background: white;
+}
+
+.div-container-desc{
+    border-radius: 0.9rem;  
+    margin-left: 1rem;
+    height: 235px;
+    background: white;
+    
+}
+
+#user-info{
+    padding: 1rem;
+    display: flex;
+    margin-right: 5rem;
+    box-shadow: black;
+}
+
+#desc-info{
+    padding: 1rem;
+    margin-left: 1rem;
+   
+}
+
+img{
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+#lastname{
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+}
+
+.divs{
+    display: flex;
+    justify-content: space-evenly
+}
+
+.title{
+    padding: 1rem;
+}
+
