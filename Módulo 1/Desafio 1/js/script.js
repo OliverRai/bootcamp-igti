@@ -2,6 +2,8 @@ let allPeoples = [];
 
 let foundAges = [];
 
+filterNames = [];   
+
 let divUsers = null;
 
 let divDescricao = null;
@@ -43,11 +45,13 @@ function searchNames() {
     const totalDeLetras = wordTyped.length;
 
     if(totalDeLetras > 0){  
-        const a = allPeoples.filter(person => person.name.toLowerCase().indexOf(wordTyped) != -1 || person.lastName.toLowerCase().indexOf(wordTyped) != -1);
-        renderUsersList(a);
-        renderDescInfo(a);
-        sumAges(a);
+        filterNames = allPeoples.filter(person => person.name.toLowerCase().indexOf(wordTyped) != -1 || person.lastName.toLowerCase().indexOf(wordTyped) != -1);
+        renderUsersList(filterNames);
+        renderDescInfo(filterNames);
+        sumAges(filterNames);
     }
+
+    console.log(filterNames)
 
 }
 //fullname = person.name + ' ' + person.lastName;   
@@ -128,7 +132,6 @@ function renderDescInfo(ages, total, fem, masc) {
             <p>Sexo masculinho: ${masc}</p>
             <p>Sexo feminino: ${fem}</p>
             <p>Soma das idades: ${ages}</p>
-            <p>Média das idades: ${total}</p>
             <p>Média formatada: ${b}</p>
         </div>
     `;
