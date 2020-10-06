@@ -1,142 +1,150 @@
-let allPeoples = [];
+const url = 'https://randomuser.me/api/?seed=javascript&results=100&nat=BR&noinfo';
 
-let foundAges = [];
-
-filterNames = [];   
-
-let divUsers = null;
-
-let divDescricao = null;
-
+let users = [];
 let inputSearch = null;
+let buttonSearch = null;
+let spinnerLoading = null;
 
-let wordTyped = null;
-
-let soma = 0;
-let count = 0;
-let totalIdade = 0;
-
-let = mensagemErro = null;
+const MIN_LENGTH_SEARCH = 1;
 
 
+window.addEventListener('load', async () => {
+    await fetchUsers();
+    mapIds();
+    addEvents();
+    enableControls();
 
-window.addEventListener('load', () => {
-    divUsers = document.querySelector('#user');
-    divDescricao = document.querySelector('#desc');
-    inputSearch = document.querySelector('#search');
-    buttonSearch = document.querySelector('#btn');
-    mensagemErro = document.querySelector('#mensagem');
-    inputSearch.addEventListener('keyup', typing);
-    inputSearch.focus();
-    fetchPeoples();
-
-    
+    showNoUsers();
+    showNoStatistics();
 });
 
-function typing(event) {
-    wordTyped = inputSearch.value;
 
-    if(event.key === 'Enter'){
-        searchNames();
-    }
-}
-
-function searchNames() {
-    const totalDeLetras = wordTyped.length;
-
-    if(totalDeLetras > 0){  
-        filterNames = allPeoples.filter(person => person.name.toLowerCase().indexOf(wordTyped) != -1 || person.lastName.toLowerCase().indexOf(wordTyped) != -1);
-        renderUsersList(filterNames);
-        renderDescInfo(filterNames);
-        sumAges(filterNames);
-    }
-
-    console.log(filterNames)
-
-}
-//fullname = person.name + ' ' + person.lastName;   
-//console.log(fullname)
-
-async function fetchPeoples() {
-    const res = await fetch('https://randomuser.me/api/?seed=javascript&results=100&nat=BR&noinfo/results');
+async function fetchUsers(){
+    const res = await fetch(url);
     const json = await res.json();
-    const api = json.results
-    allPeoples = api.map(person => {
-        return {
-            name: person.name.first,
-            lastName: person.name.last,
-            pic: person.picture.thumbnail,
-            dob: person.dob.age,
-            gender: person.gender
+
+    users = json.results.map(({login, name, picture, gender, dob}) => {
+        const {first, last} = name;
+        return{
+            id: login.uuid,
+            name: `${first} ${last}`,
+            filterName: `${first} ${last}`.toLowerCase(),
+            picture: picture.large,
+            gender: gender,
+            age: dob.age
         }
     });
-    console.log(allPeoples)
-    
+
+    users.sort((a,b) => a.name.localeCompare(b.name));
 }
 
-function renderUsersList(found) {
-    
-    let userHTML = '<div>';
-    found.forEach(person => {
-        const { name, pic, dob, lastName, gender } = person;
-        const total = found.length
-        const peopleHTML = `
-        <h2 class="title">${total} encontrados </h2>
-        <div id="user-info">
-            <img src="${pic}">
-            <p>${name}</p>
-            <p id="lastname">${lastName},</p>
-            <p>${dob}</p>
-        </div>
-    `;
-        userHTML += peopleHTML;
-    });
-
-    divUsers.innerHTML = userHTML;
+function mapIds(){
+    inputSearch = document.querySelector('#inputSearch');
+    buttonSearch = document.querySelector('#buttonSearch');
+    spinnerLoading = document.querySelector('#spinnerLoading');
+    divUsers = document.querySelector('#divUsers');
+    divStatistics = document.querySelector('#divStatistics');
 }
 
-function sumAges(found) {   
-//contar sexo fem
-    const fem = found.filter(person => {
-        return person.gender === 'female'
-    });
-
-    const female = fem.length;
-
-//contar sexo masc
-    const masc = found.filter(person => {
-        return person.gender === 'male'
-    });
-
-    const male = masc.length;
-
-    const totalIdade = found.reduce((accumulator, current) => {
-        return accumulator + current.dob;
-    },0);
-    const media = totalIdade / found.length;
-
-    renderDescInfo(totalIdade, media, female, male);
-    
-    
+function addEvents(){
+    inputSearch.addEventListener('keyup', handleChange);
+    buttonSearch.addEventListener('click', () => filterUsers(prepareSearch(inputSearch.value)));
 }
 
-function renderDescInfo(ages, total, fem, masc) {
-    
-    const c = parseFloat(total);
-    const b = c.toFixed(2);
-    
-    let userDescHTML = '<div>';
-        const descHTML = `
-        <div id="desc-info">
-            <h2>Estatísticas </h2>
-            <p>Sexo masculinho: ${masc}</p>
-            <p>Sexo feminino: ${fem}</p>
-            <p>Soma das idades: ${ages}</p>
-            <p>Média formatada: ${b}</p>
-        </div>
-    `;
-    userDescHTML += descHTML;
-    
+function enableControls(){
+    setTimeout(() => {
+        inputSearch.disabled = false;
+        inputSearch.focus();
 
-    divDescricao.innerHTML = userDescHTML;
+        spinnerLoading.classList.add('hidden');
+    }, 1000);
+}
+
+function prepareSearch(searchFromInput){
+    return searchFromInput.trim();
+}
+
+function handleChange(event){
+    const searchText = prepareSearch(event.target.value)
+    const length = searchText.length;
+
+    buttonSearch.disabled = length < MIN_LENGTH_SEARCH;
+
+    if(event.key !== 'Enter'){
+        return;
+    }
+
+    if(length < MIN_LENGTH_SEARCH){
+        return;
+    }
+
+    filterUsers(searchText); 
+}
+
+function filterUsers(searchText){
+    const lowerCaseSearchText = searchText.toLowerCase();
+    const filteredUsers = users.filter((user) => {
+        return user.filterName.includes(lowerCaseSearchText);
+    });
+
+    handleFilteredUsers(filteredUsers);
+}
+
+function handleFilteredUsers(users){
+    if(users.length === 0){
+        showNoUsers();
+        showNoStatistics();
+    }
+
+    showUsers(users);
+    showStatistics(users);
+}
+
+function showNoStatistics(){
+    divStatistics.innerHTML = `<h2>Nada a ser exibido</h2>`;
+}
+
+function showNoUsers(){
+    divUsers.innerHTML = `<h2>Nenhum usuário encontrado</h2>`
+}
+
+function showUsers(users){
+    const h3 = document.createElement('h3');
+    h3.textContent = users.length + ' usuário(s) encontrado(s)';
+
+    const ul = document.createElement('ul');
+
+    users.map(({name, picture, age}) => {
+        const li = document.createElement('li');
+        li.classList.add('info');
+
+        const img = `<img class="avatar" src=${picture} alt=${name} />`;
+        const span = `<span>${name}, ${age} anos</span>`;
+
+        li.innerHTML = `${img} ${span}`;
+        ul.appendChild(li);
+    });
+
+    divUsers.innerHTML = '';
+    divUsers.appendChild(h3);
+    divUsers.appendChild(ul);
+}
+
+function showStatistics(users){
+    const countMale = users.filter((user) => user.gender === 'male').length;
+    const countFemale = users.filter((user) => user.gender === 'female').length;
+    const sumAges = users.reduce((acc, curr)=> acc + curr.age, 0);
+    const averageAges = (sumAges / users.length || 0)
+        .toFixed(2)
+        .replace('.', ',');
+
+    divStatistics.innerHTML = `
+        <h2>Estatísticas</h2>
+
+        <ul>
+            <li>Sexo Masculino: <strong>${countMale}</strong></li>
+            <li>Sexo Feminino: <strong>${countFemale}</strong></li>
+            <li>Soma das idades: <strong>${sumAges}</strong></li>
+            <li>Média das idades: <strong>${averageAges}</strong></li>
+    `
 }
