@@ -9,7 +9,7 @@ app.use('/accounts', Router);
 
 (async () => {
     try {
-        await mongoose.connect('mongodb+srv://raiane:laberinto1@clusteigti.ytd50.mongodb.net/trabalho-pratico?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+        await mongoose.connect('urimongo', { useNewUrlParser: true, useUnifiedTopology: true });
     } catch (err) {
         console.log(err)
     }
